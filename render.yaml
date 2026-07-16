@@ -1,0 +1,58 @@
+services:
+  - type: web
+    name: farmacia-backend
+    env: node
+    plan: starter
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    rootDir: backend
+    envVars:
+      - key: NODE_VERSION
+        value: 20.x
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: farmacia-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: farmacia-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: farmacia-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: farmacia-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: farmacia-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+
+  - type: static
+    name: farmacia-frontend
+    plan: starter
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: farmacia-backend
+          property: host
+          path: /api
+
+databases:
+  - name: farmacia-db
+    databaseName: farmacia_db
+    user: farmacia_user
+    plan: starter
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Allow all IPs (for development; restrict in production)
