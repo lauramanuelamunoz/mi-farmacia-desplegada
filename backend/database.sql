@@ -1,7 +1,7 @@
 -- Script para PostgreSQL
 -- Crea la base de datos manualmente y conéctate a ella antes de ejecutar este archivo.
 -- Ejemplo:
-CREATE DATABASE farmacia_db;
+-- CREATE DATABASE farmacia_db;
 -- \c farmacia_db;
 
 -- Tipo ENUM para roles
@@ -106,8 +106,11 @@ EXECUTE FUNCTION set_updated_at();
 -- Insertar datos de prueba
 -- Insertar administrador por defecto (password: admin123)
 INSERT INTO usuarios (nombre, email, password, rol) VALUES
-('Administrador', 'admin@farmacia.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'admin')
-ON CONFLICT (email) DO NOTHING;
+('Administrador', 'admin@farmacia.com', '$2b$10$VK6VGY4iPZ06ij5WUp4ZqemOz30uB494JIKl.b1Q8zB0MhT0jl4tm', 'admin')
+ON CONFLICT (email) DO UPDATE
+SET nombre = EXCLUDED.nombre,
+    password = EXCLUDED.password,
+    rol = EXCLUDED.rol;
 
 -- Insertar categorías de prueba
 INSERT INTO categorias (nombre, descripcion) VALUES
