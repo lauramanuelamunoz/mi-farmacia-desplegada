@@ -19,11 +19,15 @@ app.use(compression());
 // Logging
 app.use(morgan('dev'));
 
-// CORS: Permitir orígenes locales y de producción
+const envOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'https://proyecto-farmacia-dfne.onrender.com'
+  ...envOrigins,
 ];
 
 app.use(cors({
