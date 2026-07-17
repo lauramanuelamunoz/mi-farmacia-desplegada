@@ -34,8 +34,13 @@ app.use(cors({
       callback(new Error('Origen no permitido por CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Manejar solicitudes OPTIONS (preflight)
+app.options('*', cors());
 
 // Parseo de JSON
 app.use(express.json());
