@@ -28,19 +28,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
       callback(new Error('Origen no permitido por CORS'));
     }
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true
 }));
-
-// Manejar solicitudes OPTIONS (preflight)
-app.options('*', cors());
 
 // Parseo de JSON
 app.use(express.json());
@@ -76,8 +71,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Iniciar servidor solo si no estamos en Vercel
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// Iniciar servidor solo si estamos ejecutando localmente
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     console.log(`📊 Ambiente: ${process.env.NODE_ENV || 'development'}`);
