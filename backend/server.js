@@ -23,7 +23,7 @@ app.use(morgan('dev'));
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  // Agrega aquí la URL de tu frontend en Render/Vercel (ej: 'https://tu-frontend.onrender.com')
+  'https://proyecto-farmacia-dfne.onrender.com'
 ];
 
 app.use(cors({
