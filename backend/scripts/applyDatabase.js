@@ -3,14 +3,44 @@ const path = require('path');
 const { Client } = require('pg');
 require('dotenv').config();
 
-const getPgConfig = (databaseOverride) => ({
-  host: process.env.PGHOST || 'localhost',
-  port: Number(process.env.PGPORT) || 5432,
-  user: process.env.PGUSER || 'postgres',
-  password: process.env.PGPASSWORD || '',
-  database: databaseOverride || process.env.PGDATABASE || 'farmacia_db',
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-});
+const connectionString =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.POSTGRES_PUBLIC_URL ||
+  process.env.DB_URL;
+
+const useSSL = process.env.DB_SSL === 'true' || !!connectionString;
+
+const getPgConfig = (databaseOverride) => {
+  // Si hay una connection string (Railway, Render, etc.), la usamos como base
+  // y solo sobreescribimos la base de datos si se solicita una distinta
+  // (por ejemplo, para conectarnos primero a "postgres" y crear la base real).
+  if (connectionString) {
+    if (databaseOverride) {
+      const url = new URL(connectionString);
+      url.pathname = `/${databaseOverride}`;
+      return {
+        connectionString: url.toString(),
+        ssl: useSSL ? { rejectUnauthorized: false } : false,
+      };
+    }
+
+    return {
+      connectionString,
+      ssl: useSSL ? { rejectUnauthorized: false } : false,
+    };
+  }
+
+  // Fallback para desarrollo local con variables PG* sueltas
+  return {
+    host: process.env.PGHOST || 'localhost',
+    port: Number(process.env.PGPORT) || 5432,
+    user: process.env.PGUSER || 'postgres',
+    password: process.env.PGPASSWORD || '',
+    database: databaseOverride || process.env.PGDATABASE || 'farmacia_db',
+    ssl: useSSL ? { rejectUnauthorized: false } : false,
+  };
+};
 
 const splitSqlStatements = (sql) => {
   // 1. Elimina comentarios multilínea /* ... */
@@ -58,6 +88,15 @@ const splitSqlStatements = (sql) => {
 };
 
 const ensureDatabaseExists = async (database) => {
+  // En Railway (y otros hosts con DATABASE_URL) la base de datos ya viene
+  // creada de fábrica: no tenemos permisos ni necesidad de crear otra,
+  // así que simplemente seguimos adelante y aplicamos el esquema sobre
+  // la base indicada en la connection string.
+  if (connectionString) {
+    console.log('Usando DATABASE_URL: se omite creación manual de base de datos.');
+    return;
+  }
+
   const adminClient = new Client(getPgConfig('postgres'));
   await adminClient.connect();
 
@@ -95,7 +134,7 @@ const applySchema = async () => {
 
   await ensureDatabaseExists(database);
 
-  const client = new Client(getPgConfig(database));
+  const client = new Client(getPgConfig(connectionString ? undefined : database));
   await client.connect();
 
   try {
