@@ -7,16 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary-50': '#eff6ff',
-        'primary-100': '#dbeafe',
-        'primary-200': '#bfdbfe',
-        'primary-300': '#93c5fd',
-        'primary-400': '#60a5fa',
-        'primary-500': '#3b82f6',
-        'primary-600': '#2563eb',
-        'primary-700': '#1d4ed8',
-        'primary-800': '#1e40af',
-        'primary-900': '#1e3a8a',
+        'primary-50': '#ecfdf5',
+        'primary-100': '#d1fae5',
+        'primary-200': '#a7f3d0',
+        'primary-300': '#6ee7b7',
+        'primary-400': '#34d399',
+        'primary-500': '#10b981',
+        'primary-600': '#059669',
+        'primary-700': '#047857',
+        'primary-800': '#065f46',
+        'primary-900': '#064e3b',
         'farmacia-green': '#059669',
         'farmacia-red': '#dc2626',
         'farmacia-yellow': '#d97706',
@@ -25,4 +25,3 @@ export default {
   },
   plugins: [],
 }
-

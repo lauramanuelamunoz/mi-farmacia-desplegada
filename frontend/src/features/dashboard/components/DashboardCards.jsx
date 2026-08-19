@@ -7,7 +7,7 @@ const DashboardCards = ({ data }) => {
       icon: Package, 
       label: 'Total Productos', 
       value: data.totalProductos || 0, 
-      color: 'bg-blue-500',
+      color: 'bg-primary-600',
       change: '+12%',
       trend: 'up'
     },

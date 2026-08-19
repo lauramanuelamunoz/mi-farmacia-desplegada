@@ -13,7 +13,11 @@ const getPgConfig = (databaseOverride) => ({
 });
 
 const splitSqlStatements = (sql) => {
-  const sanitizedSql = sql
+  // 1. Elimina comentarios multilínea /* ... */
+  const noBlockComments = sql.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // 2. Elimina comentarios de una línea --
+  const sanitizedSql = noBlockComments
     .split(/\r?\n/)
     .filter((line) => !line.trim().startsWith('--'))
     .join('\n');
@@ -81,6 +85,11 @@ const ensureDatabaseExists = async (database) => {
 const applySchema = async () => {
   const database = process.env.PGDATABASE || 'farmacia_db';
   const sqlPath = path.join(__dirname, '..', 'database.sql');
+
+  if (!fs.existsSync(sqlPath)) {
+    throw new Error(`No se encontró el archivo SQL en la ruta: ${sqlPath}`);
+  }
+
   const sql = fs.readFileSync(sqlPath, 'utf8');
   const statements = splitSqlStatements(sql);
 
@@ -91,7 +100,15 @@ const applySchema = async () => {
 
   try {
     for (const statement of statements) {
-      await client.query(statement);
+      try {
+        await client.query(statement);
+      } catch (err) {
+        console.error('\n Error al ejecutar la siguiente sentencia SQL:');
+        console.error('--------------------------------------------------');
+        console.error(statement);
+        console.error('--------------------------------------------------');
+        throw err;
+      }
     }
     console.log('Esquema PostgreSQL aplicado correctamente');
   } finally {
@@ -100,6 +117,6 @@ const applySchema = async () => {
 };
 
 applySchema().catch((error) => {
-  console.error(error.message);
+  console.error('\n' + error.message);
   process.exit(1);
 });

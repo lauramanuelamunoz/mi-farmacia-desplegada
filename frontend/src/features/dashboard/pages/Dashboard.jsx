@@ -11,7 +11,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -51,7 +51,7 @@ const Dashboard = () => {
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4">Acciones Rápidas</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="bg-blue-100 text-blue-700 p-4 rounded-lg hover:bg-blue-200 transition">
+          <button className="bg-primary-100 text-primary-700 p-4 rounded-lg hover:bg-primary-200 transition">
             Nueva Venta
           </button>
           <button className="bg-green-100 text-green-700 p-4 rounded-lg hover:bg-green-200 transition">

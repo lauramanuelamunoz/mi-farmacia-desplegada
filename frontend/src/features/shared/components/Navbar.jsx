@@ -40,7 +40,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/dashboard" className="flex items-center space-x-2">
-              <Package className="h-8 w-8 text-blue-600" />
+              <Pill className="h-8 w-8 text-primary-600" />
               <span className="text-xl font-bold text-gray-800">FarmaciaApp</span>
             </Link>
           </div>
@@ -51,7 +51,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <item.icon size={18} />
                 <span>{item.label}</span>
@@ -62,7 +62,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/perfil"
-              className="flex items-center space-x-1 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-1 text-gray-700 hover:text-primary-600"
             >
               <User size={18} />
               <span className="text-sm">{usuario.nombre}</span>
@@ -80,7 +80,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-700 hover:text-blue-600"
+              className="text-gray-700 hover:text-primary-600"
             >
               {menuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -96,7 +96,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setMenuOpen(false)}
               >
                 <item.icon size={20} />
@@ -105,7 +105,7 @@ const Navbar = () => {
             ))}
             <Link
               to="/perfil"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+              className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setMenuOpen(false)}
             >
               <User size={20} />
